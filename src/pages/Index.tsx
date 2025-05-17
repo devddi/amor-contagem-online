@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import Header from '@/components/Header';
@@ -11,8 +12,7 @@ const initialFormData: FormData = {
   relationshipStartDate: '',
   relationshipStartTime: '',
   message: '',
-  photos: [],
-  planOption: 1
+  photos: []
 };
 
 const Index = () => {
@@ -93,6 +93,10 @@ const Index = () => {
                       <span className="text-love-500 font-bold mr-2">✓</span>
                       <span>Pagamento único - sem mensalidades!</span>
                     </li>
+                    <li className="flex items-start">
+                      <span className="text-love-500 font-bold mr-2">✓</span>
+                      <span>Até 3 fotos do casal em carrossel</span>
+                    </li>
                   </ul>
                 </div>
                 
@@ -147,7 +151,7 @@ const Index = () => {
               </Button>
               
               <div className="mt-4 text-sm text-gray-500">
-                A partir de <span className="font-bold">R$29,90</span> - pagamento único
+                <span className="font-bold">R$29,90</span> - pagamento único
               </div>
             </div>
           </div>
@@ -183,7 +187,7 @@ const Index = () => {
                   Criar nosso site
                 </Button>
                 <div className="mt-4 text-sm text-gray-500">
-                  {formData.planOption === 0 ? "R$29,90" : "R$49,90"} - pagamento único
+                  R$29,90 - pagamento único
                 </div>
               </div>
             </div>

@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Image, Clock } from 'lucide-react';
-import OptionSelector from './OptionSelector';
 import { useToast } from '@/hooks/use-toast';
 
 interface CreateSiteFormProps {
@@ -18,21 +17,7 @@ export interface FormData {
   relationshipStartTime: string;
   message: string;
   photos: File[];
-  planOption: number;
 }
-
-const packageOptions = [
-  {
-    title: "1 ano, 1 foto e sem música",
-    description: "",
-    price: "R$29"
-  },
-  {
-    title: "Para sempre, 3 fotos e com música",
-    description: "",
-    price: "R$49"
-  }
-];
 
 const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
   const { toast } = useToast();
@@ -41,8 +26,7 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
     relationshipStartDate: '',
     relationshipStartTime: '',
     message: '',
-    photos: [],
-    planOption: 1
+    photos: []
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -59,57 +43,23 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
     if (e.target.files) {
       const newPhotos = Array.from(e.target.files);
       
-      // Check if we're exceeding the photo limit
-      if (formData.planOption === 0 && newPhotos.length > 1) {
+      // Check if we're exceeding the photo limit (3 photos max)
+      if ((formData.photos.length + newPhotos.length) > 3) {
         toast({
           title: "Limite de fotos excedido",
-          description: "O plano básico permite apenas 1 foto.",
-          variant: "destructive"
-        });
-        return;
-      }
-      
-      if (formData.planOption === 1 && (formData.photos.length + newPhotos.length) > 3) {
-        toast({
-          title: "Limite de fotos excedido",
-          description: "O plano premium permite até 3 fotos.",
+          description: "O plano permite até 3 fotos.",
           variant: "destructive"
         });
         return;
       }
       
       setFormData(prev => {
-        const updatedPhotos = [...prev.photos, ...newPhotos].slice(0, prev.planOption === 0 ? 1 : 3);
+        const updatedPhotos = [...prev.photos, ...newPhotos].slice(0, 3);
         const newData = { ...prev, photos: updatedPhotos };
         onFormChange(newData);
         return newData;
       });
     }
-  };
-
-  const handlePlanSelect = (index: number) => {
-    setFormData(prev => {
-      // If switching to basic plan but we already have more than 1 photo
-      if (index === 0 && prev.photos.length > 1) {
-        toast({
-          title: "Fotos removidas",
-          description: "Algumas fotos foram removidas pois o plano básico permite apenas 1 foto.",
-        });
-        
-        const newData = { 
-          ...prev, 
-          planOption: index,
-          photos: prev.photos.slice(0, 1)
-        };
-        
-        onFormChange(newData);
-        return newData;
-      }
-      
-      const newData = { ...prev, planOption: index };
-      onFormChange(newData);
-      return newData;
-    });
   };
 
   const removePhoto = (index: number) => {
@@ -125,15 +75,6 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-medium mb-2">Selecione seu plano:</h2>
-        <OptionSelector 
-          options={packageOptions} 
-          selectedIndex={formData.planOption} 
-          onSelect={handlePlanSelect} 
-        />
-      </div>
-      
       <div className="space-y-4">
         <div>
           <Label htmlFor="coupleNames">Nome do casal:</Label>
@@ -207,7 +148,7 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
               id="photo-input"
               type="file"
               accept="image/*"
-              multiple={formData.planOption === 1}
+              multiple={true}
               className="hidden"
               onChange={handlePhotoChange}
             />
@@ -235,7 +176,7 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
           )}
           
           <p className="text-sm text-gray-500 mt-2">
-            {formData.photos.length}/{formData.planOption === 0 ? 1 : 3} fotos adicionadas
+            {formData.photos.length}/3 fotos adicionadas
           </p>
         </div>
       </div>
