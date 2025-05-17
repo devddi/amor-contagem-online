@@ -2,6 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'lucide-react';
 import { FormData } from './CreateSiteForm';
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselPrevious, 
+  CarouselNext 
+} from '@/components/ui/carousel';
 
 interface PhoneMockupProps {
   formData: FormData;
@@ -16,6 +23,19 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
     minutes: 0,
     seconds: 0
   });
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  
+  // Effect for carousel auto-rotation
+  useEffect(() => {
+    if (formData.photos.length > 1) {
+      const interval = setInterval(() => {
+        setActiveIndex((current) => (current + 1) % formData.photos.length);
+      }, 5000); // Change photo every 5 seconds
+      
+      return () => clearInterval(interval);
+    }
+  }, [formData.photos.length]);
 
   useEffect(() => {
     // Calculate time difference
@@ -88,11 +108,31 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
         <div className="flex-1 overflow-auto">
           {formData.photos.length > 0 ? (
             <div className="h-48 bg-gray-200 rounded-lg mb-4 overflow-hidden">
-              <img 
-                src={URL.createObjectURL(formData.photos[0])} 
-                alt="Foto do casal" 
-                className="w-full h-full object-cover"
-              />
+              <Carousel 
+                className="w-full h-full"
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                orientation="horizontal"
+                setApi={(api) => {
+                  if (api && activeIndex !== api.selectedScrollSnap()) {
+                    api.scrollTo(activeIndex);
+                  }
+                }}
+              >
+                <CarouselContent className="h-full">
+                  {formData.photos.map((photo, i) => (
+                    <CarouselItem key={i} className="h-full">
+                      <img 
+                        src={URL.createObjectURL(photo)} 
+                        alt={`Foto do casal ${i + 1}`} 
+                        className="w-full h-full object-cover"
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
             </div>
           ) : (
             <div className="h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
