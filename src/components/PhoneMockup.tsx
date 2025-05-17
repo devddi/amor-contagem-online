@@ -12,9 +12,10 @@ import {
 
 interface PhoneMockupProps {
   formData: FormData;
+  photoUrls?: string[]; // Added support for photo URLs
 }
 
-const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
+const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData, photoUrls }) => {
   const [countdown, setCountdown] = useState({
     years: 0,
     months: 0,
@@ -28,14 +29,16 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
   
   // Effect for carousel auto-rotation
   useEffect(() => {
-    if (formData.photos.length > 1) {
+    const photosLength = photoUrls ? photoUrls.length : formData.photos.length;
+    
+    if (photosLength > 1) {
       const interval = setInterval(() => {
-        setActiveIndex((current) => (current + 1) % formData.photos.length);
+        setActiveIndex((current) => (current + 1) % photosLength);
       }, 5000); // Change photo every 5 seconds
       
       return () => clearInterval(interval);
     }
-  }, [formData.photos.length]);
+  }, [formData.photos.length, photoUrls]);
 
   useEffect(() => {
     // Calculate time difference
@@ -91,6 +94,8 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
     return () => clearInterval(timer);
   }, [formData.relationshipStartDate, formData.relationshipStartTime]);
 
+  const hasPhotos = photoUrls ? photoUrls.length > 0 : formData.photos.length > 0;
+
   return (
     <div className="w-full max-w-sm mx-auto">
       <div className="bg-gray-900 rounded-t-lg p-2 flex items-center justify-between">
@@ -106,7 +111,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
       
       <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-white p-4 rounded-b-lg h-[450px] overflow-hidden flex flex-col">
         <div className="flex-1 overflow-auto">
-          {formData.photos.length > 0 ? (
+          {hasPhotos ? (
             <div className="h-48 bg-gray-200 rounded-lg mb-4 overflow-hidden">
               <Carousel 
                 className="w-full h-full"
@@ -122,15 +127,29 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
                 }}
               >
                 <CarouselContent className="h-full">
-                  {formData.photos.map((photo, i) => (
-                    <CarouselItem key={i} className="h-full">
-                      <img 
-                        src={URL.createObjectURL(photo)} 
-                        alt={`Foto do casal ${i + 1}`} 
-                        className="w-full h-full object-cover"
-                      />
-                    </CarouselItem>
-                  ))}
+                  {photoUrls ? (
+                    // Render photos from URLs
+                    photoUrls.map((url, i) => (
+                      <CarouselItem key={i} className="h-full">
+                        <img 
+                          src={url} 
+                          alt={`Foto do casal ${i + 1}`} 
+                          className="w-full h-full object-cover"
+                        />
+                      </CarouselItem>
+                    ))
+                  ) : (
+                    // Render photos from files
+                    formData.photos.map((photo, i) => (
+                      <CarouselItem key={i} className="h-full">
+                        <img 
+                          src={URL.createObjectURL(photo)} 
+                          alt={`Foto do casal ${i + 1}`} 
+                          className="w-full h-full object-cover"
+                        />
+                      </CarouselItem>
+                    ))
+                  )}
                 </CarouselContent>
               </Carousel>
             </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import Header from '@/components/Header';
@@ -6,6 +5,8 @@ import Footer from '@/components/Footer';
 import CreateSiteForm, { FormData } from '@/components/CreateSiteForm';
 import PhoneMockup from '@/components/PhoneMockup';
 import { useToast } from '@/hooks/use-toast';
+import { createCoupleSite } from '@/services/CoupleService';
+import { useNavigate } from 'react-router-dom';
 
 const initialFormData: FormData = {
   coupleNames: '',
@@ -17,10 +18,12 @@ const initialFormData: FormData = {
 
 const Index = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isCreatingForm, setIsCreatingForm] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const handleCreateSite = () => {
+  const handleCreateSite = async () => {
     // Validate form data
     if (!formData.coupleNames) {
       toast({
@@ -49,11 +52,37 @@ const Index = () => {
       return;
     }
     
-    // Would normally proceed with payment and site creation here
-    toast({
-      title: "Site criado com sucesso!",
-      description: "Em um ambiente real, aqui seria redirecionado para o pagamento.",
-    });
+    try {
+      setIsSubmitting(true);
+      
+      // Create the couple site in Supabase
+      const result = await createCoupleSite(formData);
+      
+      if (result) {
+        toast({
+          title: "Site criado com sucesso!",
+          description: "Seu site de amor está pronto.",
+        });
+        
+        // Redirect to the new couple site
+        navigate(`/${result.site_id}`);
+      } else {
+        toast({
+          title: "Erro ao criar site",
+          description: "Ocorreu um erro ao criar seu site. Tente novamente.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Error creating site:", error);
+      toast({
+        title: "Erro ao criar site",
+        description: "Ocorreu um erro ao criar seu site. Tente novamente.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -183,8 +212,9 @@ const Index = () => {
                   size="lg"
                   className="bg-love-600 hover:bg-love-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
                   onClick={handleCreateSite}
+                  disabled={isSubmitting}
                 >
-                  Criar nosso site
+                  {isSubmitting ? "Criando..." : "Criar nosso site"}
                 </Button>
                 <div className="mt-4 text-sm text-gray-500">
                   R$29,90 - pagamento único

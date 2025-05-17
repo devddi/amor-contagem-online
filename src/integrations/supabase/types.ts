@@ -279,6 +279,74 @@ export type Database = {
           },
         ]
       }
+      love_couples: {
+        Row: {
+          couple_names: string
+          created_at: string
+          id: number
+          message: string | null
+          relationship_start_date: string
+          relationship_start_time: string | null
+          site_id: string
+          updated_at: string
+        }
+        Insert: {
+          couple_names: string
+          created_at?: string
+          id?: number
+          message?: string | null
+          relationship_start_date: string
+          relationship_start_time?: string | null
+          site_id: string
+          updated_at?: string
+        }
+        Update: {
+          couple_names?: string
+          created_at?: string
+          id?: number
+          message?: string | null
+          relationship_start_date?: string
+          relationship_start_time?: string | null
+          site_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      love_photos: {
+        Row: {
+          couple_id: number
+          created_at: string
+          id: number
+          photo_order: number
+          photo_url: string
+          updated_at: string
+        }
+        Insert: {
+          couple_id: number
+          created_at?: string
+          id?: number
+          photo_order: number
+          photo_url: string
+          updated_at?: string
+        }
+        Update: {
+          couple_id?: number
+          created_at?: string
+          id?: number
+          photo_order?: number
+          photo_url?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "love_photos_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "love_couples"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           auth_id: string
