@@ -223,10 +223,9 @@ const CoupleSite: React.FC = () => {
         
         {/* Footer */}
         <div className="mt-8 text-center text-gray-500 text-sm">
-          <p>Feito com ❤️</p>
           <p className="mt-1">
             <a href="/" className="underline hover:text-love-600 transition-colors">
-              Crie seu próprio contador de amor
+              Crie seu próprio contador de amor 💖
             </a>
           </p>
         </div>

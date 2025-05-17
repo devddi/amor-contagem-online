@@ -19,7 +19,8 @@ const initialFormData: FormData = {
 
 const coupleImages = [
   "https://casamento.biz/wp-content/uploads/2019/04/fotos-de-casal-tumblr-2.jpeg",
-  "https://i.pinimg.com/originals/ef/5d/8c/ef5d8c94c0cf2f1082d3d498e4b0ce59.jpg"
+  "https://i.pinimg.com/originals/ef/5d/8c/ef5d8c94c0cf2f1082d3d498e4b0ce59.jpg",
+  "https://i.pinimg.com/originals/06/cb/f6/06cbf681eba6bf503d3e819d112b40c9.jpg"
 ];
 
 const Index = () => {
