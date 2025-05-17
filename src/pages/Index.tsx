@@ -152,7 +152,7 @@ const Index = () => {
                     <div className="text-center">
                       <Button 
                         size="lg" 
-                        className="bg-love-600 hover:bg-love-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
+                        className="bg-love-600 hover:bg-love-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all animate-pulse-subtle"
                         onClick={() => setIsCreatingForm(true)}
                       >
                         Criar meu site
@@ -250,7 +250,7 @@ const Index = () => {
               <div className="mt-12 text-center">
                 <Button
                   size="lg"
-                  className="bg-love-600 hover:bg-love-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
+                  className="bg-love-600 hover:bg-love-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all animate-pulse-subtle"
                   onClick={handleCreateSite}
                   disabled={isSubmitting}
                 >

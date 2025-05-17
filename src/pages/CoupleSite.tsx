@@ -18,8 +18,7 @@ const CoupleSite: React.FC = () => {
     months: 0,
     days: 0,
     hours: 0,
-    minutes: 0,
-    seconds: 0
+    minutes: 0
   });
   
   const { toast } = useToast();
@@ -78,7 +77,7 @@ const CoupleSite: React.FC = () => {
       const dateStr = couple.relationship_start_date;
       const timeStr = couple.relationship_start_time;
       if (!dateStr || dateStr === 'null' || dateStr === 'undefined') {
-        return { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+        return { years: 0, months: 0, days: 0, hours: 0, minutes: 0 };
       }
       let startDate: Date;
       if (timeStr && timeStr !== 'null' && timeStr !== 'undefined' && timeStr !== '') {
@@ -90,14 +89,14 @@ const CoupleSite: React.FC = () => {
       }
       if (isNaN(startDate.getTime())) {
         console.warn('Data inválida recebida:', { dateStr, timeStr });
-        return { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+        return { years: 0, months: 0, days: 0, hours: 0, minutes: 0 };
       }
       const now = new Date();
       let difference = now.getTime() - startDate.getTime();
       if (difference < 0) difference = 0;
       let seconds = Math.floor(difference / 1000);
       let minutes = Math.floor(seconds / 60);
-      seconds = seconds % 60;
+      seconds = seconds % 60; // Mantido apenas para cálculo interno
       let hours = Math.floor(minutes / 60);
       minutes = minutes % 60;
       let days = Math.floor(hours / 24);
@@ -111,8 +110,7 @@ const CoupleSite: React.FC = () => {
         months: isNaN(months) ? 0 : months,
         days: isNaN(days) ? 0 : days,
         hours: isNaN(hours) ? 0 : hours,
-        minutes: isNaN(minutes) ? 0 : minutes,
-        seconds: isNaN(seconds) ? 0 : seconds
+        minutes: isNaN(minutes) ? 0 : minutes
       };
     };
     const timer = setInterval(() => {
@@ -207,7 +205,7 @@ const CoupleSite: React.FC = () => {
                     {countdown.days > 0 && `${countdown.days} ${countdown.days === 1 ? 'dia' : 'dias'}`}
                   </p>
                   <p className="text-love-500">
-                    {countdown.hours} horas, {countdown.minutes} minutos e {countdown.seconds} segundos
+                    {countdown.hours} horas e {countdown.minutes} minutos
                   </p>
                 </div>
                 

@@ -73,8 +73,8 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
+    <div className="space-y-8">
+      <div className="space-y-8">
         <div>
           <Label htmlFor="coupleNames">Nome do casal:</Label>
           <Input 
@@ -87,8 +87,8 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
           />
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
+        <div className="flex flex-row gap-4">
+          <div className="flex-1">
             <Label htmlFor="relationshipStartDate">Início do relacionamento:</Label>
             <div className="flex mt-1">
               <Input 
@@ -101,7 +101,7 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
             </div>
           </div>
           
-          <div>
+          <div className="flex-1">
             <Label htmlFor="relationshipStartTime">Hora do início:</Label>
             <div className="flex mt-1">
               <Input 
@@ -110,6 +110,7 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
                 type="time" 
                 value={formData.relationshipStartTime}
                 onChange={handleInputChange}
+                step="1"
               />
             </div>
           </div>

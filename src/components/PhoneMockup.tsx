@@ -173,7 +173,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData, photoUrls }) => {
                 {countdown.days > 0 && `${countdown.days} ${countdown.days === 1 ? 'dia' : 'dias'}`}
               </p>
               <p className="text-love-500">
-                {countdown.hours} horas, {countdown.minutes} minutos e {countdown.seconds} segundos
+                {countdown.hours} horas e {countdown.minutes} minutos
               </p>
             </div>
             
