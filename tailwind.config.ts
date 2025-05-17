@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,41 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+        // Romantic themed colors
+        love: {
+          100: '#ffe6eb',
+          200: '#ffb3c6',
+          300: '#ff80a1',
+          400: '#ff4d7c',
+          500: '#ff1a57',
+          600: '#e60046',
+          700: '#b30037',
+          800: '#800028',
+          900: '#4d0019',
+        },
+        gold: {
+          100: '#fff7e6',
+          200: '#ffe4b3',
+          300: '#ffd280',
+          400: '#ffbf4d',
+          500: '#ffad1a',
+          600: '#e69500',
+          700: '#b37400',
+          800: '#805300',
+          900: '#4d3200',
+        },
+        night: {
+          100: '#e6e6ff',
+          200: '#b3b3ff',
+          300: '#8080ff',
+          400: '#4d4dff',
+          500: '#1a1a7f',
+          600: '#0d0d66',
+          700: '#09094d',
+          800: '#060633',
+          900: '#03031a',
+        },
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +119,16 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+        'pulse-heart': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.15)' },
+        }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+        'pulse-heart': 'pulse-heart 2s infinite',
 			}
 		}
 	},
