@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import Header from '@/components/Header';
@@ -80,7 +79,7 @@ const Index = () => {
                   <ul className="text-left space-y-4">
                     <li className="flex items-start">
                       <span className="text-love-500 font-bold mr-2">✓</span>
-                      <span>Contador em tempo real com dias, horas, minutos e segundos</span>
+                      <span>Contador em tempo real com anos, meses, dias, horas, minutos e segundos</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-love-500 font-bold mr-2">✓</span>
@@ -118,23 +117,16 @@ const Index = () => {
                           Júlia & Pedro
                         </h3>
                         
-                        <div className="grid grid-cols-4 gap-2 mb-4">
-                          <div className="bg-love-50 p-2 rounded-lg">
-                            <div className="text-xl font-bold text-love-600">365</div>
-                            <div className="text-xs text-gray-500">dias</div>
-                          </div>
-                          <div className="bg-love-50 p-2 rounded-lg">
-                            <div className="text-xl font-bold text-love-600">12</div>
-                            <div className="text-xs text-gray-500">horas</div>
-                          </div>
-                          <div className="bg-love-50 p-2 rounded-lg">
-                            <div className="text-xl font-bold text-love-600">30</div>
-                            <div className="text-xs text-gray-500">min</div>
-                          </div>
-                          <div className="bg-love-50 p-2 rounded-lg">
-                            <div className="text-xl font-bold text-love-600">15</div>
-                            <div className="text-xs text-gray-500">seg</div>
-                          </div>
+                        <div className="text-center mb-4">
+                          <p className="font-bold text-gray-700">
+                            Juntos
+                          </p>
+                          <p className="text-love-600 font-medium">
+                            1 ano, 0 meses, 0 dias
+                          </p>
+                          <p className="text-love-500">
+                            12 horas, 30 minutos e 15 segundos
+                          </p>
                         </div>
                         
                         <p className="text-gray-700 text-sm italic">

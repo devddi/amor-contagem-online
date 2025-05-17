@@ -9,6 +9,8 @@ interface PhoneMockupProps {
 
 const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
   const [countdown, setCountdown] = useState({
+    years: 0,
+    months: 0,
     days: 0,
     hours: 0,
     minutes: 0,
@@ -28,6 +30,8 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
       // Check if the date is valid (in the past)
       if (difference < 0) {
         return {
+          years: 0,
+          months: 0,
           days: 0,
           hours: 0,
           minutes: 0,
@@ -36,12 +40,24 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
       }
       
       // Calculate time units
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      let seconds = Math.floor(difference / 1000);
+      let minutes = Math.floor(seconds / 60);
+      seconds = seconds % 60;
       
-      return { days, hours, minutes, seconds };
+      let hours = Math.floor(minutes / 60);
+      minutes = minutes % 60;
+      
+      // Approximate calculation for years, months, and days
+      let days = Math.floor(hours / 24);
+      hours = hours % 24;
+      
+      let months = Math.floor(days / 30.4375); // Average days in a month
+      days = Math.floor(days % 30.4375);
+      
+      const years = Math.floor(months / 12);
+      months = months % 12;
+      
+      return { years, months, days, hours, minutes, seconds };
     };
 
     // Update countdown every second
@@ -89,23 +105,18 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData }) => {
               {formData.coupleNames || "André & Carol"}
             </h1>
             
-            <div className="grid grid-cols-4 gap-2 mb-4">
-              <div className="bg-love-50 p-2 rounded-lg">
-                <div className="text-xl font-bold text-love-600">{countdown.days}</div>
-                <div className="text-xs text-gray-500">dias</div>
-              </div>
-              <div className="bg-love-50 p-2 rounded-lg">
-                <div className="text-xl font-bold text-love-600">{countdown.hours}</div>
-                <div className="text-xs text-gray-500">horas</div>
-              </div>
-              <div className="bg-love-50 p-2 rounded-lg">
-                <div className="text-xl font-bold text-love-600">{countdown.minutes}</div>
-                <div className="text-xs text-gray-500">min</div>
-              </div>
-              <div className="bg-love-50 p-2 rounded-lg">
-                <div className="text-xl font-bold text-love-600">{countdown.seconds}</div>
-                <div className="text-xs text-gray-500">seg</div>
-              </div>
+            <div className="text-center mb-4">
+              <p className="font-bold text-gray-700">
+                Juntos
+              </p>
+              <p className="text-love-600 font-medium">
+                {countdown.years > 0 && `${countdown.years} ${countdown.years === 1 ? 'ano' : 'anos'}, `}
+                {countdown.months > 0 && `${countdown.months} ${countdown.months === 1 ? 'mês' : 'meses'}, `}
+                {countdown.days > 0 && `${countdown.days} ${countdown.days === 1 ? 'dia' : 'dias'}`}
+              </p>
+              <p className="text-love-500">
+                {countdown.hours} horas, {countdown.minutes} minutos e {countdown.seconds} segundos
+              </p>
             </div>
             
             <p className="text-gray-700 text-sm italic">
