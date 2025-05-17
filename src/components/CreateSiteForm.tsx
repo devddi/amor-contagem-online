@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -161,7 +160,7 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
                   <img
                     src={URL.createObjectURL(photo)}
                     alt={`Foto do casal ${index + 1}`}
-                    className="w-full h-24 object-cover rounded-md"
+                    className="w-full h-40 object-cover rounded-md"
                   />
                   <button
                     type="button"

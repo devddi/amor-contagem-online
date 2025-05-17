@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -7,6 +7,7 @@ import PhoneMockup from '@/components/PhoneMockup';
 import { useToast } from '@/hooks/use-toast';
 import { createCoupleSite } from '@/services/CoupleService';
 import { useNavigate } from 'react-router-dom';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
 const initialFormData: FormData = {
   coupleNames: '',
@@ -16,13 +17,32 @@ const initialFormData: FormData = {
   photos: []
 };
 
+const coupleImages = [
+  "https://casamento.biz/wp-content/uploads/2019/04/fotos-de-casal-tumblr-2.jpeg",
+  "https://i.pinimg.com/originals/ef/5d/8c/ef5d8c94c0cf2f1082d3d498e4b0ce59.jpg"
+];
+
 const Index = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isCreatingForm, setIsCreatingForm] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [carouselApi, setCarouselApi] = useState(null);
   
+  useEffect(() => {
+    if (!carouselApi) return;
+    const interval = setInterval(() => {
+      setCarouselIndex((prev) => {
+        const next = (prev + 1) % coupleImages.length;
+        carouselApi.scrollTo(next);
+        return next;
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [carouselApi]);
+
   const handleCreateSite = async () => {
     // Validate form data
     if (!formData.coupleNames) {
@@ -87,13 +107,13 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Header onLogoClick={() => setIsCreatingForm(false)} />
       
       <main className="flex-grow">
         {!isCreatingForm ? (
           <div className="container px-6 py-12 mx-auto">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-love-500 to-love-700 text-transparent bg-clip-text">
+              <h1 className="headline-love text-5xl font-bold mb-4 bg-gradient-to-r from-love-500 to-love-700 text-transparent bg-clip-text">
                 Conte cada segundo do seu amor ❤️
               </h1>
               <p className="text-xl text-gray-600 mb-12">
@@ -127,6 +147,20 @@ const Index = () => {
                       <span>Até 3 fotos do casal em carrossel</span>
                     </li>
                   </ul>
+                  <div className="mt-14 flex justify-center">
+                    <div className="text-center">
+                      <Button 
+                        size="lg" 
+                        className="bg-love-600 hover:bg-love-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
+                        onClick={() => setIsCreatingForm(true)}
+                      >
+                        Criar meu site
+                      </Button>
+                      <div className="mt-4 text-sm text-gray-500">
+                        <span className="font-bold">R$29,90</span> - pagamento único
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="order-1 lg:order-2">
@@ -137,17 +171,34 @@ const Index = () => {
                         <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                         <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                       </div>
-                      <div className="text-gray-400 text-xs">loveyou.com/julia-e-pedro</div>
+                      <div className="text-gray-400 text-xs">timeinlove.com.br/carlos-e-julia</div>
                     </div>
                     
-                    <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-white p-4 rounded-b-lg h-[450px]">
-                      <div className="h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                        <span className="text-4xl">❤️</span>
+                    <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-white p-4 rounded-b-lg h-[600px]">
+                      <div className="h-80 w-full bg-gray-200 rounded-lg mb-4 overflow-hidden">
+                        <Carousel
+                          className="w-full h-full"
+                          opts={{ align: 'start', loop: true }}
+                          orientation="horizontal"
+                          setApi={setCarouselApi}
+                        >
+                          <CarouselContent className="h-full">
+                            {coupleImages.map((src, i) => (
+                              <CarouselItem key={i} className="h-full">
+                                <img
+                                  src={src}
+                                  alt={`Foto de um casal ${i + 1}`}
+                                  className="w-full h-full object-cover rounded-lg"
+                                />
+                              </CarouselItem>
+                            ))}
+                          </CarouselContent>
+                        </Carousel>
                       </div>
                       
                       <div className="text-center">
                         <h3 className="font-dancing text-2xl font-bold mb-2 text-love-600">
-                          Júlia & Pedro
+                          Carlos & Júlia
                         </h3>
                         
                         <div className="text-center mb-4">
@@ -169,18 +220,6 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-              
-              <Button 
-                size="lg" 
-                className="bg-love-600 hover:bg-love-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
-                onClick={() => setIsCreatingForm(true)}
-              >
-                Criar meu site
-              </Button>
-              
-              <div className="mt-4 text-sm text-gray-500">
-                <span className="font-bold">R$29,90</span> - pagamento único
               </div>
             </div>
           </div>

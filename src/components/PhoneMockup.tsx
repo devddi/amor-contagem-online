@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Image } from 'lucide-react';
 import { FormData } from './CreateSiteForm';
@@ -105,14 +104,14 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData, photoUrls }) => {
           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
         </div>
         <div className="text-gray-400 text-xs">
-          {formData.coupleNames ? `loveyou.com/${formData.coupleNames.toLowerCase().replace(/\s/g, '-').replace(/[^\w-]/g, '')}` : 'loveyou.com/'}
+          {formData.coupleNames ? `timeinlove.com.br/${formData.coupleNames.toLowerCase().replace(/\s/g, '-').replace(/[^\w-]/g, '')}` : 'timeinlove.com.br/'}
         </div>
       </div>
       
-      <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-white p-4 rounded-b-lg h-[450px] overflow-hidden flex flex-col">
+      <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-white p-4 rounded-b-lg h-[700px] overflow-hidden flex flex-col">
         <div className="flex-1 overflow-auto">
           {hasPhotos ? (
-            <div className="h-48 bg-gray-200 rounded-lg mb-4 overflow-hidden">
+            <div className="h-96 bg-gray-200 rounded-lg mb-4 overflow-hidden">
               <Carousel 
                 className="w-full h-full"
                 opts={{
@@ -154,7 +153,7 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData, photoUrls }) => {
               </Carousel>
             </div>
           ) : (
-            <div className="h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+            <div className="h-96 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
               <Image className="h-8 w-8 text-gray-400" />
             </div>
           )}
