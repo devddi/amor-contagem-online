@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { LoveCouple, getCoupleBySiteId, getPhotosByRoupleId, LovePhoto } from '@/services/CoupleService';
@@ -74,57 +73,52 @@ const CoupleSite: React.FC = () => {
   // Calculate and update countdown
   useEffect(() => {
     if (!couple) return;
-    
-    // Calculate time difference
+
     const calculateTimeDifference = () => {
-      const startDate = couple.relationship_start_date && couple.relationship_start_time 
-        ? new Date(`${couple.relationship_start_date}T${couple.relationship_start_time}:00`)
-        : new Date(couple.relationship_start_date);
-      
-      const now = new Date();
-      const difference = now.getTime() - startDate.getTime();
-      
-      // Check if the date is valid (in the past)
-      if (difference < 0) {
-        return {
-          years: 0,
-          months: 0,
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0
-        };
+      const dateStr = couple.relationship_start_date;
+      const timeStr = couple.relationship_start_time;
+      if (!dateStr || dateStr === 'null' || dateStr === 'undefined') {
+        return { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
       }
-      
-      // Calculate time units
+      let startDate: Date;
+      if (timeStr && timeStr !== 'null' && timeStr !== 'undefined' && timeStr !== '') {
+        // Garantir formato HH:mm
+        const safeTime = timeStr.length === 5 ? timeStr : '00:00';
+        startDate = new Date(`${dateStr}T${safeTime}:00`);
+      } else {
+        startDate = new Date(dateStr);
+      }
+      if (isNaN(startDate.getTime())) {
+        console.warn('Data inválida recebida:', { dateStr, timeStr });
+        return { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+      }
+      const now = new Date();
+      let difference = now.getTime() - startDate.getTime();
+      if (difference < 0) difference = 0;
       let seconds = Math.floor(difference / 1000);
       let minutes = Math.floor(seconds / 60);
       seconds = seconds % 60;
-      
       let hours = Math.floor(minutes / 60);
       minutes = minutes % 60;
-      
-      // Approximate calculation for years, months, and days
       let days = Math.floor(hours / 24);
       hours = hours % 24;
-      
-      let months = Math.floor(days / 30.4375); // Average days in a month
+      let months = Math.floor(days / 30.4375);
       days = Math.floor(days % 30.4375);
-      
       const years = Math.floor(months / 12);
       months = months % 12;
-      
-      return { years, months, days, hours, minutes, seconds };
+      return {
+        years: isNaN(years) ? 0 : years,
+        months: isNaN(months) ? 0 : months,
+        days: isNaN(days) ? 0 : days,
+        hours: isNaN(hours) ? 0 : hours,
+        minutes: isNaN(minutes) ? 0 : minutes,
+        seconds: isNaN(seconds) ? 0 : seconds
+      };
     };
-
-    // Update countdown every second
     const timer = setInterval(() => {
       setCountdown(calculateTimeDifference());
     }, 1000);
-
-    // Initial calculation
     setCountdown(calculateTimeDifference());
-
     return () => clearInterval(timer);
   }, [couple]);
 
@@ -155,16 +149,12 @@ const CoupleSite: React.FC = () => {
           <div className="bg-love-600 p-4 text-white text-center">
             <h1 className="font-dancing text-3xl">{couple.couple_names}</h1>
           </div>
-          
           {/* Photos */}
-          <div className="h-64 bg-gray-200">
+          <div className="w-full flex items-center justify-center bg-gray-200">
             {photos.length > 0 ? (
               <Carousel 
-                className="w-full h-full"
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
+                className="w-full"
+                opts={{ align: "start", loop: true }}
                 orientation="horizontal"
                 setApi={(api) => {
                   if (api && activeIndex !== api.selectedScrollSnap()) {
@@ -172,48 +162,49 @@ const CoupleSite: React.FC = () => {
                   }
                 }}
               >
-                <CarouselContent className="h-full">
+                <CarouselContent className="w-full">
                   {photos.map((photo, i) => (
-                    <CarouselItem key={i} className="h-full">
+                    <CarouselItem key={i} className="w-full">
                       <img 
                         src={photo.photo_url} 
                         alt={`Foto do casal ${i + 1}`} 
-                        className="w-full h-full object-cover"
+                        className="w-full object-contain rounded-lg"
+                        style={{ maxHeight: 300 }}
                       />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
               </Carousel>
             ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="text-4xl">❤️</div>
+              <div className="w-full flex items-center justify-center" style={{ height: 180 }}>
+                <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-gray-400">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7a4 4 0 014-4h10a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.5 11.5a2 2 0 114 0 2 2 0 01-4 0zm7.5 2.5l-2.086-2.086a2 2 0 00-2.828 0L7 16" />
+                </svg>
               </div>
             )}
           </div>
-          
-          {/* Countdown */}
-          <div className="p-6 text-center">
-            <h2 className="font-bold text-gray-700 text-xl mb-2">
-              Juntos há
-            </h2>
+          {/* Countdown e Mensagem */}
+          <div className="p-6 text-center flex flex-col items-center gap-2">
+            <h2 className="font-bold text-gray-700 text-xl">Juntos</h2>
             <p className="text-love-600 font-medium text-xl">
-              {countdown.years > 0 && `${countdown.years} ${countdown.years === 1 ? 'ano' : 'anos'}, `}
-              {countdown.months > 0 && `${countdown.months} ${countdown.months === 1 ? 'mês' : 'meses'}, `}
+              {countdown.years > 0 && `${countdown.years} ${countdown.years === 1 ? 'ano' : 'anos'}`}
+              {countdown.years > 0 && (countdown.months > 0 || countdown.days > 0) && ', '}
+              {countdown.months > 0 && `${countdown.months} ${countdown.months === 1 ? 'mês' : 'meses'}`}
+              {countdown.months > 0 && countdown.days > 0 && ', '}
               {countdown.days > 0 && `${countdown.days} ${countdown.days === 1 ? 'dia' : 'dias'}`}
+              {!(countdown.years || countdown.months || countdown.days) && '0 dias'}
             </p>
             <p className="text-love-500">
-              {countdown.hours} horas, {countdown.minutes} minutos e {countdown.seconds} segundos
+              {`${countdown.hours} horas, ${countdown.minutes} minutos e ${countdown.seconds} segundos`}
             </p>
-            
-            {/* Message */}
             {couple.message && (
-              <div className="mt-8 p-4 bg-pink-50 rounded-lg">
-                <p className="text-gray-700 italic">"{couple.message}"</p>
-              </div>
+              <p className="text-gray-700 text-sm italic mt-4 whitespace-pre-line">
+                {couple.message}
+              </p>
             )}
           </div>
         </div>
-        
         {/* Footer */}
         <div className="mt-8 text-center text-gray-500 text-sm">
           <p>Feito com ❤️</p>
