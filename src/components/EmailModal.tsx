@@ -21,6 +21,7 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
   const [showPixModal, setShowPixModal] = React.useState(false)
   const [pixData, setPixData] = React.useState<{ pix_url: string; pix_base64: string } | null>(null)
   const [siteId, setSiteId] = React.useState<number | null>(null)
+  const [siteUrl, setSiteUrl] = React.useState<string | null>(null)
   const [showSuccessModal, setShowSuccessModal] = React.useState(false)
   const { toast } = useToast()
   const navigate = useNavigate()
@@ -62,6 +63,7 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
 
       // Salva o site_id para verificação posterior
       setSiteId(result.id)
+      setSiteUrl(result.site_id)
 
       // Depois, chamar o webhook com o site_id gerado
       const response = await fetch('https://n8n.ddinsights.tech/webhook/timeinlove', {
@@ -72,7 +74,8 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
         body: JSON.stringify({
           email,
           valor: 29.90,
-          site_id: result.id
+          site_id: result.site_id,
+          id: result.id
         })
       })
 
@@ -108,6 +111,7 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
     setEmail("");
     setPixData(null);
     setSiteId(null);
+    setSiteUrl(null);
     onResetForm();
     navigate('/', { replace: true });
   }
@@ -158,13 +162,21 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
               Seu site foi criado com sucesso! Em instantes você receberá um email com o link de acesso e o QR code do seu site.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
+          <div className="mt-4 space-y-2">
             <Button 
               className="w-full bg-green-600 hover:bg-green-700"
               onClick={handleCloseSuccessModal}
             >
               Fechar
             </Button>
+            {siteUrl && (
+              <Button 
+                className="w-full bg-love-gradient"
+                onClick={() => window.open(`https://www.timeinlove.com.br/${siteUrl}`, '_blank')}
+              >
+                Ver meu site
+              </Button>
+            )}
           </div>
         </DialogContent>
       </Dialog>
