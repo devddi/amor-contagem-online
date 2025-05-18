@@ -274,7 +274,7 @@ const Index = () => {
                         <div className="w-16 h-px bg-gray-700 mx-auto my-6"></div>
 
                         {/* Message */}
-                        <p className="text-gray-300 text-sm italic">
+                        <p className="text-gray-300 text-sm">
                           Um ano de muito amor, carinho e companheirismo. Que venham muitos mais! Te amo infinito ❤️
                         </p>
                       </div>

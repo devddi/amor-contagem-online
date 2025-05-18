@@ -55,7 +55,7 @@ export function ImageCompressionProgress({
             Redução de {compressionRatio}%
           </div>
 
-          <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+          <div className="relative aspect-video overflow-hidden rounded-lg">
             <img 
               src={previewUrl} 
               alt="Preview" 
