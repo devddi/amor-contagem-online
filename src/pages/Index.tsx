@@ -182,11 +182,11 @@ const Index = () => {
                       <div className="text-gray-400 text-xs">timeinlove.com.br/carlos-e-julia</div>
                     </div>
                     
-                    <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-white p-4 rounded-b-lg h-[600px] overflow-hidden flex flex-col">
+                    <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-gray-900 p-4 rounded-b-lg h-[600px] overflow-hidden flex flex-col">
                       {/* Content inside frame */}
                       {/* Name (Carlos & Júlia example) - Moved above carousel */}
                       <div className="text-center mb-4 mt-4">
-                        <h3 className="font-dancing text-2xl font-bold text-love-600">
+                        <h3 className="font-dancing text-2xl font-bold text-gray-300">
                           Carlos & Júlia
                         </h3>
                       </div>
@@ -218,22 +218,22 @@ const Index = () => {
 
                         {/* Juntos há and Counter */}
                         <div className="text-center mb-4">
-                          <p className="font-bold text-gray-700 mb-2">
+                          <p className="font-bold text-gray-300 mb-2">
                             Juntos há
                           </p>
-                          <p className="text-love-600 font-medium">
+                          <p className="text-gray-300 font-medium">
                             1 ano, 0 meses, 0 dias
                           </p>
-                          <p className="text-love-500">
+                          <p className="text-gray-300">
                             12 horas, 30 minutos e 15 segundos
                           </p>
                         </div>
                         
                         {/* Separator bar */}
-                        <div className="w-16 h-px bg-gray-300 mx-auto my-6"></div>
+                        <div className="w-16 h-px bg-gray-700 mx-auto my-6"></div>
 
                         {/* Message */}
-                        <p className="text-gray-700 text-sm italic">
+                        <p className="text-gray-300 text-sm italic">
                           Um ano de muito amor, carinho e companheirismo. Que venham muitos mais! Te amo infinito ❤️
                         </p>
                       </div>
