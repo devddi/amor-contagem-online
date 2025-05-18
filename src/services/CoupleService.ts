@@ -1,4 +1,3 @@
-
 import { FormData } from '@/components/CreateSiteForm';
 import { supabase } from '@/integrations/supabase/client';
 import { v4 as uuidv4 } from 'uuid';
@@ -48,7 +47,8 @@ export const createCoupleSite = async (formData: FormData): Promise<LoveCouple |
           relationship_start_date: formData.relationshipStartDate,
           relationship_start_time: formData.relationshipStartTime || null,
           message: formData.message || null,
-          site_id: siteId
+          site_id: siteId,
+          status: false
         }
       ])
       .select('*')
@@ -156,5 +156,21 @@ export const getPhotosByRoupleId = async (coupleId: number): Promise<LovePhoto[]
   } catch (error) {
     console.error('Error in getPhotosByRoupleId:', error);
     return null;
+  }
+};
+
+export const checkSiteStatus = async (siteId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('love_couples')
+      .select('status')
+      .eq('id', siteId)
+      .single();
+
+    if (error) throw error;
+    return data?.status || false;
+  } catch (error) {
+    console.error('Error checking site status:', error);
+    return false;
   }
 };

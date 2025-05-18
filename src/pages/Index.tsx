@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { createCoupleSite } from '@/services/CoupleService';
 import { useNavigate } from 'react-router-dom';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { EmailModal } from '@/components/EmailModal';
 
 const initialFormData: FormData = {
   coupleNames: '',
@@ -31,6 +32,8 @@ const Index = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState(null);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [siteId, setSiteId] = useState("");
   
   useEffect(() => {
     if (!carouselApi) return;
@@ -45,6 +48,39 @@ const Index = () => {
   }, [carouselApi]);
 
   const handleCreateSite = async () => {
+    // Validate form data
+    if (!formData.coupleNames) {
+      toast({
+        title: "Nome do casal obrigatório",
+        description: "Por favor, insira o nome do casal para continuar.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!formData.relationshipStartDate || !formData.relationshipStartTime) {
+      toast({
+        title: "Data e hora obrigatórias",
+        description: "Por favor, insira a data e hora do início do relacionamento.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (formData.photos.length === 0) {
+      toast({
+        title: "Foto obrigatória",
+        description: "Por favor, adicione pelo menos uma foto do casal.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsEmailModalOpen(true);
+  };
+
+  const handleEmailSubmit = async (email: string) => {
+    setIsEmailModalOpen(false);
     // Scroll to top smoothly
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
@@ -107,6 +143,11 @@ const Index = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleResetForm = () => {
+    setFormData(initialFormData);
+    setIsCreatingForm(false);
   };
 
   return (
@@ -287,6 +328,14 @@ const Index = () => {
       </main>
       
       <Footer />
+
+      <EmailModal 
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        onSubmit={handleEmailSubmit}
+        formData={formData}
+        onResetForm={handleResetForm}
+      />
     </div>
   );
 };
