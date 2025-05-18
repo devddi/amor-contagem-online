@@ -173,7 +173,7 @@ const CoupleSite: React.FC = () => {
             </div>
 
             {photos.length > 0 ? (
-              <div className="h-96 bg-gray-200 rounded-lg mb-4 overflow-hidden">
+              <div className="h-[500px] bg-gray-200 rounded-lg mb-4 overflow-hidden">
                 <Carousel 
                   className="w-full h-full"
                   opts={{

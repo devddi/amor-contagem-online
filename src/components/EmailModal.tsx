@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast"
 import { PixPaymentModal } from "./PixPaymentModal"
 import { createCoupleSite, checkSiteStatus } from "@/services/CoupleService"
 import { useNavigate } from "react-router-dom"
+import { ImageCompressionProgress } from "./ImageCompressionProgress"
 
 interface EmailModalProps {
   isOpen: boolean
@@ -23,6 +24,19 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
   const [siteId, setSiteId] = React.useState<number | null>(null)
   const [siteUrl, setSiteUrl] = React.useState<string | null>(null)
   const [showSuccessModal, setShowSuccessModal] = React.useState(false)
+  const [compressionProgress, setCompressionProgress] = React.useState<{
+    isOpen: boolean;
+    progress: number;
+    originalSize: number;
+    compressedSize: number;
+    previewUrl: string;
+  }>({
+    isOpen: false,
+    progress: 0,
+    originalSize: 0,
+    compressedSize: 0,
+    previewUrl: ''
+  })
   const { toast } = useToast()
   const navigate = useNavigate()
 
@@ -116,6 +130,22 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
     navigate('/', { replace: true });
   }
 
+  const handleCompressionProgress = (
+    index: number,
+    progress: number,
+    originalSize: number,
+    compressedSize: number,
+    previewUrl: string
+  ) => {
+    setCompressionProgress({
+      isOpen: true,
+      progress,
+      originalSize,
+      compressedSize,
+      previewUrl
+    });
+  };
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
@@ -180,6 +210,14 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
           </div>
         </DialogContent>
       </Dialog>
+
+      <ImageCompressionProgress
+        isOpen={compressionProgress.isOpen}
+        progress={compressionProgress.progress}
+        originalSize={compressionProgress.originalSize}
+        compressedSize={compressionProgress.compressedSize}
+        previewUrl={compressionProgress.previewUrl}
+      />
     </>
   )
 } 

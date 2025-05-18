@@ -1,6 +1,7 @@
 import { FormData } from '@/components/CreateSiteForm';
 import { supabase } from '@/integrations/supabase/client';
 import { v4 as uuidv4 } from 'uuid';
+import imageCompression from 'browser-image-compression';
 
 export interface LoveCouple {
   id: number;
@@ -71,18 +72,69 @@ export const createCoupleSite = async (formData: FormData): Promise<LoveCouple |
   }
 };
 
+// Função para comprimir a imagem
+const compressImage = async (
+  file: File, 
+  onProgress?: (progress: number, compressedSize: number) => void
+): Promise<{ file: File; previewUrl: string }> => {
+  const options = {
+    maxSizeMB: 1, // Tamanho máximo do arquivo em MB
+    maxWidthOrHeight: 1920, // Dimensão máxima (largura ou altura)
+    useWebWorker: true, // Usar web worker para não travar a UI
+    fileType: 'image/jpeg', // Converter para JPEG para melhor compressão
+    onProgress: (progress: number) => {
+      if (onProgress) {
+        onProgress(progress, 0); // O tamanho comprimido será atualizado depois
+      }
+    }
+  };
+
+  try {
+    const compressedFile = await imageCompression(file, options);
+    const previewUrl = URL.createObjectURL(compressedFile);
+    
+    if (onProgress) {
+      onProgress(100, compressedFile.size);
+    }
+    
+    return {
+      file: new File([compressedFile], file.name, { type: 'image/jpeg' }),
+      previewUrl
+    };
+  } catch (error) {
+    console.error('Erro ao comprimir imagem:', error);
+    const previewUrl = URL.createObjectURL(file);
+    return { file, previewUrl }; // Retorna o arquivo original em caso de erro
+  }
+};
+
 // Upload photos to Supabase storage and save references to the database
-export const uploadPhotos = async (coupleId: number, photos: File[]): Promise<void> => {
+export const uploadPhotos = async (
+  coupleId: number, 
+  photos: File[],
+  onCompressionProgress?: (index: number, progress: number, originalSize: number, compressedSize: number, previewUrl: string) => void
+): Promise<void> => {
   try {
     for (let i = 0; i < photos.length; i++) {
       const photo = photos[i];
-      const fileExt = photo.name.split('.').pop();
+      
+      // Comprime a imagem antes do upload
+      const { file: compressedPhoto, previewUrl } = await compressImage(
+        photo,
+        (progress, compressedSize) => {
+          if (onCompressionProgress) {
+            onCompressionProgress(i, progress, photo.size, compressedSize, previewUrl);
+          }
+        }
+      );
+      
+      const fileExt = 'jpg'; // Agora sempre será jpg devido à compressão
       const fileName = `${coupleId}/${uuidv4()}.${fileExt}`;
       
       // Upload to Supabase storage
       const { data: fileData, error: uploadError } = await supabase.storage
         .from('love-photos')
-        .upload(fileName, photo);
+        .upload(fileName, compressedPhoto);
         
       if (uploadError) {
         console.error('Error uploading photo:', uploadError);
@@ -111,6 +163,9 @@ export const uploadPhotos = async (coupleId: number, photos: File[]): Promise<vo
         console.error('Error saving photo reference:', photoRefError);
         throw photoRefError;
       }
+
+      // Limpa a URL do preview
+      URL.revokeObjectURL(previewUrl);
     }
   } catch (error) {
     console.error('Error in uploadPhotos:', error);
