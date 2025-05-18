@@ -45,6 +45,9 @@ const Index = () => {
   }, [carouselApi]);
 
   const handleCreateSite = async () => {
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     // Validate form data
     if (!formData.coupleNames) {
       toast({
@@ -153,7 +156,10 @@ const Index = () => {
                       <Button 
                         size="lg" 
                         className="bg-love-600 hover:bg-love-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all animate-pulse-subtle"
-                        onClick={() => setIsCreatingForm(true)}
+                        onClick={() => {
+                          setIsCreatingForm(true);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
                       >
                         Criar meu site
                       </Button>
@@ -165,6 +171,7 @@ const Index = () => {
                 </div>
                 
                 <div className="order-1 lg:order-2">
+                  {/* Phone Mockup Frame Start */}
                   <div className="max-w-xs mx-auto">
                     <div className="bg-gray-900 rounded-t-lg p-2 flex items-center justify-between">
                       <div className="flex space-x-1">
@@ -175,7 +182,16 @@ const Index = () => {
                       <div className="text-gray-400 text-xs">timeinlove.com.br/carlos-e-julia</div>
                     </div>
                     
-                    <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-white p-4 rounded-b-lg h-[600px]">
+                    <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-white p-4 rounded-b-lg h-[600px] overflow-hidden flex flex-col">
+                      {/* Content inside frame */}
+                      {/* Name (Carlos & Júlia example) - Moved above carousel */}
+                      <div className="text-center mb-4 mt-4">
+                        <h3 className="font-dancing text-2xl font-bold text-love-600">
+                          Carlos & Júlia
+                        </h3>
+                      </div>
+
+                      {/* Carousel */}
                       <div className="h-80 w-full bg-gray-200 rounded-lg mb-4 overflow-hidden">
                         <Carousel
                           className="w-full h-full"
@@ -197,14 +213,13 @@ const Index = () => {
                         </Carousel>
                       </div>
                       
+                      {/* Text content (Juntos há, Counter, Message) */}
                       <div className="text-center">
-                        <h3 className="font-dancing text-2xl font-bold mb-2 text-love-600">
-                          Carlos & Júlia
-                        </h3>
-                        
+
+                        {/* Juntos há and Counter */}
                         <div className="text-center mb-4">
-                          <p className="font-bold text-gray-700">
-                            Juntos
+                          <p className="font-bold text-gray-700 mb-2">
+                            Juntos há
                           </p>
                           <p className="text-love-600 font-medium">
                             1 ano, 0 meses, 0 dias
@@ -214,12 +229,18 @@ const Index = () => {
                           </p>
                         </div>
                         
+                        {/* Separator bar */}
+                        <div className="w-16 h-px bg-gray-300 mx-auto my-6"></div>
+
+                        {/* Message */}
                         <p className="text-gray-700 text-sm italic">
                           Um ano de muito amor, carinho e companheirismo. Que venham muitos mais! Te amo infinito ❤️
                         </p>
                       </div>
+                      {/* End Content inside frame */}
                     </div>
                   </div>
+                  {/* Phone Mockup Frame End */}
                 </div>
               </div>
             </div>

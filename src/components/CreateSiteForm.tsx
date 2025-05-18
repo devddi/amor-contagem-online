@@ -87,7 +87,7 @@ const CreateSiteForm: React.FC<CreateSiteFormProps> = ({ onFormChange }) => {
           />
         </div>
         
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1">
             <Label htmlFor="relationshipStartDate">Início do relacionamento:</Label>
             <div className="flex mt-1">

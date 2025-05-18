@@ -42,15 +42,33 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData, photoUrls }) => {
   useEffect(() => {
     // Calculate time difference
     const calculateTimeDifference = () => {
-      const startDate = formData.relationshipStartDate && formData.relationshipStartTime 
-        ? new Date(`${formData.relationshipStartDate}T${formData.relationshipStartTime}:00`)
-        : new Date();
-      
+      // console.log('calculateTimeDifference called');
+      // console.log('formData.relationshipStartDate:', formData.relationshipStartDate);
+      // console.log('formData.relationshipStartTime:', formData.relationshipStartTime);
+
+      const dateStr = formData.relationshipStartDate;
+      const timeStr = formData.relationshipStartTime;
+
+      // Ensure both date and time are present
+      if (!dateStr || !timeStr) {
+         return { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+      }
+
+      // Construct the date string in ISO 8601 format (YYYY-MM-DDTHH:mm:ss)
+      // Ensure time has seconds part (append :00 if not present)
+      const fullTimeStr = timeStr.includes(':') && timeStr.split(':').length === 2 ? `${timeStr}:00` : timeStr;
+      const startDate = new Date(`${dateStr}T${fullTimeStr}`);
+
+      // console.log('Calculated startDate:', startDate);
+
       const now = new Date();
-      const difference = now.getTime() - startDate.getTime();
+      let difference = now.getTime() - startDate.getTime();
       
+      // console.log('Current time (now):', now);
+      // console.log('Time difference (ms):', difference);
+
       // Check if the date is valid (in the past)
-      if (difference < 0) {
+      if (isNaN(startDate.getTime()) || difference < 0) {
         return {
           years: 0,
           months: 0,
@@ -108,8 +126,16 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData, photoUrls }) => {
         </div>
       </div>
       
-      <div className="border-t-0 border-x-8 border-b-8 border-gray-900 bg-white p-4 rounded-b-lg h-[700px] overflow-hidden flex flex-col">
-        <div className="flex-1 overflow-auto">
+      <div className="border-t-0 border-x-8 border-b-8 border-gray-900 p-4 rounded-b-lg h-[800px] overflow-hidden flex flex-col dark bg-background text-foreground">
+        <div className="flex-1">
+
+          {/* Name (Carlos & Júlia or formData.coupleNames) - Moved above carousel */}
+          <div className="text-center">
+            <h3 className="font-dancing text-2xl font-bold mb-4">
+              {formData.coupleNames || "Carlos & Júlia"}
+            </h3>
+          </div>
+
           {hasPhotos ? (
             <div className="h-96 bg-gray-200 rounded-lg mb-4 overflow-hidden">
               <Carousel 
@@ -159,27 +185,33 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({ formData, photoUrls }) => {
           )}
           
           <div className="text-center">
-            <h1 className="font-dancing text-2xl font-bold mb-2 text-love-600">
-              {formData.coupleNames || "André & Carol"}
-            </h1>
-            
+
+            {/* Juntos há and Counter */}
             <div className="text-center mb-4">
-              <p className="font-bold text-gray-700">
-                Juntos
+              <p className="font-bold mb-2">
+                Juntos há
               </p>
-              <p className="text-love-600 font-medium">
+              <p className="font-medium">
                 {countdown.years > 0 && `${countdown.years} ${countdown.years === 1 ? 'ano' : 'anos'}, `}
                 {countdown.months > 0 && `${countdown.months} ${countdown.months === 1 ? 'mês' : 'meses'}, `}
                 {countdown.days > 0 && `${countdown.days} ${countdown.days === 1 ? 'dia' : 'dias'}`}
               </p>
-              <p className="text-love-500">
-                {countdown.hours} horas e {countdown.minutes} minutos
+              <p>
+                {countdown.hours} horas, {countdown.minutes} minutos e {countdown.seconds} segundos
               </p>
             </div>
             
-            <p className="text-gray-700 text-sm italic">
-              {formData.message || "Cada momento ao seu lado é um presente. Te amo mais a cada segundo que passa! 💕"}
-            </p>
+            {/* Separator bar */}
+            {formData.message && (
+              <div className="w-16 h-px bg-gray-300 mx-auto my-6"></div>
+            )}
+
+            {/* Message */}
+            {formData.message && (
+              <p className="">
+                {formData.message}
+              </p>
+            )}
           </div>
         </div>
       </div>
