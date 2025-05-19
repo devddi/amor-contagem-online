@@ -283,31 +283,37 @@ export type Database = {
         Row: {
           couple_names: string
           created_at: string
+          email: string | null
           id: number
           message: string | null
           relationship_start_date: string
           relationship_start_time: string | null
           site_id: string
+          status: boolean
           updated_at: string
         }
         Insert: {
           couple_names: string
           created_at?: string
+          email?: string | null
           id?: number
           message?: string | null
           relationship_start_date: string
           relationship_start_time?: string | null
           site_id: string
+          status?: boolean
           updated_at?: string
         }
         Update: {
           couple_names?: string
           created_at?: string
+          email?: string | null
           id?: number
           message?: string | null
           relationship_start_date?: string
           relationship_start_time?: string | null
           site_id?: string
+          status?: boolean
           updated_at?: string
         }
         Relationships: []

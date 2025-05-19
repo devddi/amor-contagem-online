@@ -34,7 +34,7 @@ export const generateSiteId = (coupleNames: string): string => {
 };
 
 // Save couple information and upload photos
-export const createCoupleSite = async (formData: FormData): Promise<LoveCouple | null> => {
+export const createCoupleSite = async (formData: FormData, email?: string): Promise<LoveCouple | null> => {
   try {
     // Generate a site ID from the couple names
     const siteId = generateSiteId(formData.coupleNames);
@@ -49,7 +49,8 @@ export const createCoupleSite = async (formData: FormData): Promise<LoveCouple |
           relationship_start_time: formData.relationshipStartTime || null,
           message: formData.message || null,
           site_id: siteId,
-          status: false
+          status: false,
+          email: email || null  // Add the email field
         }
       ])
       .select('*')

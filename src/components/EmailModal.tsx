@@ -68,18 +68,18 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
     setIsSubmitting(true)
 
     try {
-      // Primeiro, criar o site
-      const result = await createCoupleSite(formData)
+      // First, create the site and save the email
+      const result = await createCoupleSite(formData, email)
       
       if (!result) {
         throw new Error('Erro ao criar o site')
       }
 
-      // Salva o site_id para verificação posterior
+      // Saves the site_id for later verification
       setSiteId(result.id)
       setSiteUrl(result.site_id)
 
-      // Depois, chamar o webhook com o site_id gerado
+      // Then, call the webhook with the site_id generated
       const response = await fetch('https://n8n.ddinsights.tech/webhook/timeinlove', {
         method: 'POST',
         headers: {
@@ -99,14 +99,14 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
 
       const data = await response.json()
       
-      // Armazena os dados do PIX e mostra o modal
+      // Store PIX data and show modal
       setPixData({
         pix_url: data.pix_url,
         pix_base64: data.pix_base64
       })
       setShowPixModal(true)
       
-      // Fecha o modal de email
+      // Close email modal
       onClose()
     } catch (error) {
       console.error('Erro ao processar:', error)
@@ -220,4 +220,4 @@ export function EmailModal({ isOpen, onClose, onSubmit, formData, onResetForm }:
       />
     </>
   )
-} 
+}
